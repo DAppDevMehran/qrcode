@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import QRCode from "react-qr-code";
 
 export default function QRCodeGenerator() {
-  const [qrCode, setQrCode] = useState("");
   const [input, setInput] = useState("");
+  const [qrCode, setQrCode] = useState("");
 
-  function handleGenerateQrCode() {
-    setQrCode(input);
-    setInput("");
-  }
+  // Memoize the function to prevent unnecessary re-renders
+  const handleGenerateQrCode = useCallback(() => {
+    if (input.trim()) {
+      setQrCode(input.trim());
+      setInput(""); // Clear input after generating QR code
+    }
+  }, [input]);
 
   return (
     <div>
@@ -22,15 +25,13 @@ export default function QRCodeGenerator() {
           placeholder="Enter your value here"
         />
         <button
-          disabled={input && input.trim() !== "" ? false : true}
+          disabled={!input.trim()} // Simplified the condition to disable the button
           onClick={handleGenerateQrCode}
         >
           Generate
         </button>
       </div>
-      <div>
-        <QRCode id="qr-code-value" value={qrCode} size={400} bgColor="#fff" />
-      </div>
+      <div>{qrCode && <QRCode value={qrCode} size={400} bgColor="#fff" />}</div>
     </div>
   );
 }
