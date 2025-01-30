@@ -1,17 +1,16 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import QRCode from "react-qr-code";
 
 export default function QRCodeGenerator() {
   const [input, setInput] = useState("");
   const [qrCode, setQrCode] = useState("");
 
-  // Memoize the function to prevent unnecessary re-renders
-  const handleGenerateQrCode = useCallback(() => {
+  function handleGenerateQrCode() {
     if (input.trim()) {
       setQrCode(input.trim());
       setInput(""); // Clear input after generating QR code
     }
-  }, [input]);
+  }
 
   return (
     <div>
